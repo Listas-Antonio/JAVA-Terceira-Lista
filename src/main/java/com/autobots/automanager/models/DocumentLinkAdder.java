@@ -7,11 +7,11 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
 import com.autobots.automanager.controller.AddressController;
-import com.autobots.automanager.controller.ClientController;
+import com.autobots.automanager.controller.UserController;
 import com.autobots.automanager.controller.DocumentController;
 import com.autobots.automanager.controller.TelephoneController;
 import com.autobots.automanager.entity.Address;
-import com.autobots.automanager.entity.Client;
+import com.autobots.automanager.entity.User;
 import com.autobots.automanager.entity.Document;
 import com.autobots.automanager.entity.Telephone;
 

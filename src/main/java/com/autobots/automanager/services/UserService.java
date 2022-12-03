@@ -7,24 +7,24 @@ import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.autobots.automanager.entity.Client;
-import com.autobots.automanager.repository.ClientRepository;
+import com.autobots.automanager.entity.User;
+import com.autobots.automanager.repository.UserRepository;
 
 @Service
-public class ClientService {
+public class UserService {
 	@Autowired
-	private ClientRepository repository;
+	private UserRepository repository;
 	
-	public List<Client> findAll(){
+	public List<User> findAll(){
 		return repository.findAll();
 	}
 	
-	public Client findById(Long id) {
-		Optional<Client> obj = repository.findById(id);
+	public User findById(Long id) {
+		Optional<User> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Produto não encontrado", null));
 	}
 	
-	public Client insert(Client obj) {
+	public User insert(User obj) {
 		return repository.save(obj);
 	}
 	
@@ -33,20 +33,24 @@ public class ClientService {
 		repository.deleteById(id);
 	}
 	
-	public Client update(Client obj) {
-		Client newObj = findById(obj.getId());
+	public User update(User obj) {
+		User newObj = findById(obj.getId());
 		updateData(newObj, obj);
 		return repository.save(newObj);
 	}
 	
-	private void updateData(Client newObj, Client obj) {
+	private void updateData(User newObj, User obj) {
 		newObj.setAddress(obj.getAddress());
-		newObj.setBirthDate(obj.getBirthDate());
+		newObj.setCredentials(obj.getCredentials());
 		newObj.setDocuments(obj.getDocuments());
+		newObj.setEmails(obj.getEmails());
+		newObj.setMerchandise(obj.getMerchandise());
 		newObj.setName(obj.getName());
-		newObj.setRegistrationDate(obj.getRegistrationDate());
+		newObj.setProfiles(obj.getProfiles());
+		newObj.setSales(obj.getSales());
 		newObj.setSocialName(obj.getSocialName());
-		newObj.setTelephone(obj.getTelephone());
+		newObj.setTelephones(obj.getTelephones());
+		newObj.setVehicles(obj.getVehicles());
 	}
 	
 }

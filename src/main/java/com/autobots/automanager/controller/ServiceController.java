@@ -14,57 +14,54 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.autobots.automanager.entity.Client;
-import com.autobots.automanager.models.ClientLinkAdder;
-import com.autobots.automanager.services.ClientService;
-
+import com.autobots.automanager.entity.ServiceEntity;
+import com.autobots.automanager.services.ServiceService;
 
 
 @RestController
-@RequestMapping("/client")
-public class ClientController {
+@RequestMapping("/service")
+public class ServiceController {
 	
 	@Autowired
-	private ClientService service;
+	private ServiceService service;
 	
-	@Autowired
-	private ClientLinkAdder linkAdder;
+
 	
-	@GetMapping("/clients")
-	public ResponseEntity<List<Client>> getAllClients(){
-		List<Client> allClients = service.findAll();
-		if(allClients.isEmpty()) {
-			ResponseEntity<List<Client>> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	@GetMapping("/services")
+	public ResponseEntity<List<ServiceEntity>> getAllServices(){
+		List<ServiceEntity> allObjects = service.findAll();
+		if(allObjects.isEmpty()) {
+			ResponseEntity<List<ServiceEntity>> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			return response;
 		} else {
-			linkAdder.addLink(allClients);
+
 			
-			ResponseEntity<List<Client>> response = new ResponseEntity<>(allClients, HttpStatus.ACCEPTED);
+			ResponseEntity<List<ServiceEntity>> response = new ResponseEntity<>(allObjects, HttpStatus.ACCEPTED);
 			return response;
 		}
 	}
 	
-	@GetMapping("/client/{id}")
-	public ResponseEntity<Client> getClient(@PathVariable Long id){
-		Client client = service.findById(id);
-		if(client == null) {
-			ResponseEntity<Client> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	@GetMapping("/service/{id}")
+	public ResponseEntity<ServiceEntity> getService(@PathVariable Long id){
+		ServiceEntity obj = service.findById(id);
+		if(obj == null) {
+			ResponseEntity<ServiceEntity> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			return response;
 		} else {
-			linkAdder.addLink(client);
-			ResponseEntity<Client> response = new ResponseEntity<>(client, HttpStatus.FOUND);
+
+			ResponseEntity<ServiceEntity> response = new ResponseEntity<>(obj, HttpStatus.FOUND);
 			return response;
 		}
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<?> insertNewClient(@RequestBody Client obj){
+	public ResponseEntity<?> insertNewService(@RequestBody ServiceEntity obj){
 
 
 		HttpStatus status;
 		String responseString;
-        
-		if(obj.getId() == null){
+        Long x = obj.getId();
+		if(x == null){
         	
             status = HttpStatus.NOT_FOUND;
             responseString = "Body cannot be null";    
@@ -80,7 +77,7 @@ public class ClientController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<?> updateClient(@RequestBody Client obj){
+	public ResponseEntity<?> updateService(@RequestBody ServiceEntity obj){
 		HttpStatus status;
 		String responseString;
 		
@@ -101,13 +98,13 @@ public class ClientController {
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteClient(@PathVariable Long id){
+	public ResponseEntity<?> deleteService(@PathVariable Long id){
 		HttpStatus status;
 		String responseString;
 		
-		Client client = service.findById(id);
+		ServiceEntity obj = service.findById(id);
 		
-		if(client.getId() == null) {
+		if(obj.getId() == null) {
 			status = HttpStatus.NOT_FOUND;
 			responseString = "Object not found";
 		}else {

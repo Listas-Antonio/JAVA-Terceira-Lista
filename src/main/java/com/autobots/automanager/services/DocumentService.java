@@ -42,6 +42,7 @@ public class DocumentService {
 	private void updateData(Document newObj, Document obj) {
 		newObj.setDocumentType(obj.getDocumentType());
 		newObj.setNumber(obj.getNumber());
+		newObj.setEmissionDate(obj.getEmissionDate());
 	}
 	
 }

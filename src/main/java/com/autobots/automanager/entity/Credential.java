@@ -7,24 +7,22 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import org.springframework.hateoas.RepresentationModel;
-
-import com.autobots.automanager.enumerators.DocumentType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 import lombok.Data;
 
 @Data
 @Entity
-public class Document extends RepresentationModel<Document>{
-	@Id
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Credential {
+	@Id()
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column
-	private Date emissionDate;
-	@Column(unique = true)
-	private String number;
 	@Column(nullable = false)
-	private DocumentType documentType;
-
+	private Date creationDate;
+	@Column()
+	private Date lastAccess;
+	@Column(nullable = false)
+	private boolean inactive;
 }

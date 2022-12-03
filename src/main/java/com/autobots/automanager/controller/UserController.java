@@ -14,59 +14,57 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.autobots.automanager.entity.Address;
 import com.autobots.automanager.entity.User;
-import com.autobots.automanager.models.AddressLinkAdder;
-import com.autobots.automanager.services.AddressService;
+import com.autobots.automanager.models.UserLinkAdder;
 import com.autobots.automanager.services.UserService;
 
 
 
 @RestController
-@RequestMapping("/address")
-public class AddressController {
+@RequestMapping("/user")
+public class UserController {
 	
 	@Autowired
-	private AddressService service;
-	
+	private UserService service;
 	
 	@Autowired
-	private AddressLinkAdder linkAdder;
+	private UserLinkAdder linkAdder;
 	
-	@GetMapping("/addresses")
-	public ResponseEntity<List<Address>> getAllAddresses(){
-		List<Address> allAddresses = service.findAll();
-		if(allAddresses.isEmpty()) {
-			ResponseEntity<List<Address>> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			return response;
-		}else {
-			linkAdder.addLink(allAddresses);
-			ResponseEntity<List<Address>> response = new ResponseEntity<>(allAddresses, HttpStatus.ACCEPTED);
-			return response;
-		}
-	}
-	
-	@GetMapping("/address/{id}")
-	public ResponseEntity<Address> getAddress(@PathVariable Long id){
-		Address address = service.findById(id);
-		
-		if(address.getId() == null) {
-			ResponseEntity<Address> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	@GetMapping("/users")
+	public ResponseEntity<List<User>> getAllUsers(){
+		List<User> allClients = service.findAll();
+		if(allClients.isEmpty()) {
+			ResponseEntity<List<User>> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			return response;
 		} else {
-			linkAdder.addLink(address);
-			ResponseEntity<Address> response = new ResponseEntity<>(address, HttpStatus.ACCEPTED);
+			linkAdder.addLink(allClients);
+			
+			ResponseEntity<List<User>> response = new ResponseEntity<>(allClients, HttpStatus.ACCEPTED);
 			return response;
 		}
 	}
+	
+	@GetMapping("/user/{id}")
+	public ResponseEntity<User> getUser(@PathVariable Long id){
+		User client = service.findById(id);
+		if(client == null) {
+			ResponseEntity<User> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return response;
+		} else {
+			linkAdder.addLink(client);
+			ResponseEntity<User> response = new ResponseEntity<>(client, HttpStatus.FOUND);
+			return response;
+		}
+	}
+	
 	@PostMapping("/register")
-	public ResponseEntity<?> insertNewAddress(@RequestBody Address obj){
+	public ResponseEntity<?> insertNewUser(@RequestBody User obj){
 
 
 		HttpStatus status;
 		String responseString;
-
-        if(obj.getId() == null) {
+        
+		if(obj.getId() == null){
         	
             status = HttpStatus.NOT_FOUND;
             responseString = "Body cannot be null";    
@@ -82,15 +80,14 @@ public class AddressController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<?> updateAddress(@RequestBody Address obj){
-
+	public ResponseEntity<?> updateUser(@RequestBody User obj){
 		HttpStatus status;
 		String responseString;
-
-        if(obj.getId() == null) {
-        	
-        	responseString = "Body cannot be null";    
-            status = HttpStatus.NOT_FOUND;
+		
+		if(obj.getId() == null) {
+			
+			responseString = "Body cannot be null";
+			status = HttpStatus.NOT_FOUND;
 			
 		}else {
 			
@@ -104,15 +101,13 @@ public class AddressController {
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteAddress(@PathVariable Long id){
-
+	public ResponseEntity<?> deleteUser(@PathVariable Long id){
 		HttpStatus status;
 		String responseString;
-
-		Address obj = service.findById(id);
 		
-        if(obj.getId() == null) {
-
+		User client = service.findById(id);
+		
+		if(client.getId() == null) {
 			status = HttpStatus.NOT_FOUND;
 			responseString = "Object not found";
 		}else {
@@ -122,6 +117,6 @@ public class AddressController {
 			
 		}
 		
-		return new ResponseEntity<>(responseString, status);	
+		return new ResponseEntity<>(responseString, status);
 	}
 }

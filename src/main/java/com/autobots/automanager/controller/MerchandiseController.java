@@ -14,59 +14,54 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.autobots.automanager.entity.Address;
-import com.autobots.automanager.entity.User;
-import com.autobots.automanager.models.AddressLinkAdder;
-import com.autobots.automanager.services.AddressService;
-import com.autobots.automanager.services.UserService;
-
+import com.autobots.automanager.entity.Merchandise;
+import com.autobots.automanager.services.MerchandiseService;
 
 
 @RestController
-@RequestMapping("/address")
-public class AddressController {
+@RequestMapping("/merchandise")
+public class MerchandiseController {
 	
 	@Autowired
-	private AddressService service;
+	private MerchandiseService service;
 	
+
 	
-	@Autowired
-	private AddressLinkAdder linkAdder;
-	
-	@GetMapping("/addresses")
-	public ResponseEntity<List<Address>> getAllAddresses(){
-		List<Address> allAddresses = service.findAll();
-		if(allAddresses.isEmpty()) {
-			ResponseEntity<List<Address>> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			return response;
-		}else {
-			linkAdder.addLink(allAddresses);
-			ResponseEntity<List<Address>> response = new ResponseEntity<>(allAddresses, HttpStatus.ACCEPTED);
-			return response;
-		}
-	}
-	
-	@GetMapping("/address/{id}")
-	public ResponseEntity<Address> getAddress(@PathVariable Long id){
-		Address address = service.findById(id);
-		
-		if(address.getId() == null) {
-			ResponseEntity<Address> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	@GetMapping("/merchandises")
+	public ResponseEntity<List<Merchandise>> getAllMerchandises(){
+		List<Merchandise> allObjects = service.findAll();
+		if(allObjects.isEmpty()) {
+			ResponseEntity<List<Merchandise>> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			return response;
 		} else {
-			linkAdder.addLink(address);
-			ResponseEntity<Address> response = new ResponseEntity<>(address, HttpStatus.ACCEPTED);
+
+			
+			ResponseEntity<List<Merchandise>> response = new ResponseEntity<>(allObjects, HttpStatus.ACCEPTED);
 			return response;
 		}
 	}
+	
+	@GetMapping("/merchandise/{id}")
+	public ResponseEntity<Merchandise> getMerchandise(@PathVariable Long id){
+		Merchandise obj = service.findById(id);
+		if(obj == null) {
+			ResponseEntity<Merchandise> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return response;
+		} else {
+
+			ResponseEntity<Merchandise> response = new ResponseEntity<>(obj, HttpStatus.FOUND);
+			return response;
+		}
+	}
+	
 	@PostMapping("/register")
-	public ResponseEntity<?> insertNewAddress(@RequestBody Address obj){
+	public ResponseEntity<?> insertNewMerchandise(@RequestBody Merchandise obj){
 
 
 		HttpStatus status;
 		String responseString;
-
-        if(obj.getId() == null) {
+        Long x = obj.getId();
+		if(x == null){
         	
             status = HttpStatus.NOT_FOUND;
             responseString = "Body cannot be null";    
@@ -82,15 +77,14 @@ public class AddressController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<?> updateAddress(@RequestBody Address obj){
-
+	public ResponseEntity<?> updateEmail(@RequestBody Merchandise obj){
 		HttpStatus status;
 		String responseString;
-
-        if(obj.getId() == null) {
-        	
-        	responseString = "Body cannot be null";    
-            status = HttpStatus.NOT_FOUND;
+		
+		if(obj.getId() == null) {
+			
+			responseString = "Body cannot be null";
+			status = HttpStatus.NOT_FOUND;
 			
 		}else {
 			
@@ -104,15 +98,13 @@ public class AddressController {
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteAddress(@PathVariable Long id){
-
+	public ResponseEntity<?> deleteEmail(@PathVariable Long id){
 		HttpStatus status;
 		String responseString;
-
-		Address obj = service.findById(id);
 		
-        if(obj.getId() == null) {
-
+		Merchandise obj = service.findById(id);
+		
+		if(obj.getId() == null) {
 			status = HttpStatus.NOT_FOUND;
 			responseString = "Object not found";
 		}else {
@@ -122,6 +114,6 @@ public class AddressController {
 			
 		}
 		
-		return new ResponseEntity<>(responseString, status);	
+		return new ResponseEntity<>(responseString, status);
 	}
 }

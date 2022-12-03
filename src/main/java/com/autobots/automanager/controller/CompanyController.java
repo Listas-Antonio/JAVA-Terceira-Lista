@@ -14,59 +14,55 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.autobots.automanager.entity.Address;
-import com.autobots.automanager.entity.User;
-import com.autobots.automanager.models.AddressLinkAdder;
-import com.autobots.automanager.services.AddressService;
-import com.autobots.automanager.services.UserService;
+import com.autobots.automanager.entity.Company;
+import com.autobots.automanager.services.CompanyService;
 
 
 
 @RestController
-@RequestMapping("/address")
-public class AddressController {
+@RequestMapping("/company")
+public class CompanyController {
 	
 	@Autowired
-	private AddressService service;
+	private CompanyService service;
 	
+
 	
-	@Autowired
-	private AddressLinkAdder linkAdder;
-	
-	@GetMapping("/addresses")
-	public ResponseEntity<List<Address>> getAllAddresses(){
-		List<Address> allAddresses = service.findAll();
-		if(allAddresses.isEmpty()) {
-			ResponseEntity<List<Address>> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			return response;
-		}else {
-			linkAdder.addLink(allAddresses);
-			ResponseEntity<List<Address>> response = new ResponseEntity<>(allAddresses, HttpStatus.ACCEPTED);
-			return response;
-		}
-	}
-	
-	@GetMapping("/address/{id}")
-	public ResponseEntity<Address> getAddress(@PathVariable Long id){
-		Address address = service.findById(id);
-		
-		if(address.getId() == null) {
-			ResponseEntity<Address> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	@GetMapping("/companies")
+	public ResponseEntity<List<Company>> getAllCompanies(){
+		List<Company> allObjects = service.findAll();
+		if(allObjects.isEmpty()) {
+			ResponseEntity<List<Company>> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			return response;
 		} else {
-			linkAdder.addLink(address);
-			ResponseEntity<Address> response = new ResponseEntity<>(address, HttpStatus.ACCEPTED);
+
+			
+			ResponseEntity<List<Company>> response = new ResponseEntity<>(allObjects, HttpStatus.ACCEPTED);
 			return response;
 		}
 	}
+	
+	@GetMapping("/company/{id}")
+	public ResponseEntity<Company> getCompany(@PathVariable Long id){
+		Company obj = service.findById(id);
+		if(obj == null) {
+			ResponseEntity<Company> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return response;
+		} else {
+
+			ResponseEntity<Company> response = new ResponseEntity<>(obj, HttpStatus.FOUND);
+			return response;
+		}
+	}
+	
 	@PostMapping("/register")
-	public ResponseEntity<?> insertNewAddress(@RequestBody Address obj){
+	public ResponseEntity<?> insertCompany(@RequestBody Company obj){
 
 
 		HttpStatus status;
 		String responseString;
-
-        if(obj.getId() == null) {
+        
+		if(obj.getId() == null){
         	
             status = HttpStatus.NOT_FOUND;
             responseString = "Body cannot be null";    
@@ -82,15 +78,14 @@ public class AddressController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<?> updateAddress(@RequestBody Address obj){
-
+	public ResponseEntity<?> updateCompany(@RequestBody Company obj){
 		HttpStatus status;
 		String responseString;
-
-        if(obj.getId() == null) {
-        	
-        	responseString = "Body cannot be null";    
-            status = HttpStatus.NOT_FOUND;
+		
+		if(obj.getId() == null) {
+			
+			responseString = "Body cannot be null";
+			status = HttpStatus.NOT_FOUND;
 			
 		}else {
 			
@@ -104,15 +99,13 @@ public class AddressController {
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteAddress(@PathVariable Long id){
-
+	public ResponseEntity<?> deleteCompany(@PathVariable Long id){
 		HttpStatus status;
 		String responseString;
-
-		Address obj = service.findById(id);
 		
-        if(obj.getId() == null) {
-
+		Company obj = service.findById(id);
+		
+		if(obj.getId() == null) {
 			status = HttpStatus.NOT_FOUND;
 			responseString = "Object not found";
 		}else {
@@ -122,6 +115,6 @@ public class AddressController {
 			
 		}
 		
-		return new ResponseEntity<>(responseString, status);	
+		return new ResponseEntity<>(responseString, status);
 	}
 }
